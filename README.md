@@ -1,24 +1,6 @@
 # lk-shop
 
-## Project setup
+## 2020/2/1
 ```
-npm install
+环境搭建, FastClick和其他配置
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
