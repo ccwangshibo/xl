@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import {getHomeData} from './../../service/api/index'
 export default {
   name: 'Home',
   data() { 
@@ -12,11 +13,12 @@ export default {
 
     }
   },
-  props: {
-
-  },
-  components:{
-
+  created(){
+    getHomeData().then((response)=>{
+      console.log(response);
+    }).catch(error=>{
+      console.log(error);
+    })
   },
   mounted() {
 
