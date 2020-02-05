@@ -1,10 +1,11 @@
 <template>
   <div id="home">
-    Home
+    <Header></Header>
   </div>
 </template>
 
 <script>
+import Header from './components/header/Header'
 import {getHomeData} from './../../service/api/index'
 export default {
   name: 'Home',
@@ -13,12 +14,16 @@ export default {
 
     }
   },
+  components:{
+    Header
+  },
   created(){
-    getHomeData().then((response)=>{
-      console.log(response);
-    }).catch(error=>{
-      console.log(error);
-    })
+    // 测试接收请求
+    // getHomeData().then((response)=>{
+    //   console.log(response);
+    // }).catch(error=>{
+    //   console.log(error);
+    // })
   },
   mounted() {
 
