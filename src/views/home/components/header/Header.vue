@@ -68,6 +68,7 @@ export default {
   background: white;
   border-bottom: 1px solid #eee;
   border-top: 1px solid #eee;
+  z-index: 2;
 }
 .locationWrapper{
   float: left;

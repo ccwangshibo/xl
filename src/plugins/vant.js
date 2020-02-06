@@ -1,5 +1,10 @@
 import Vue from 'vue';
-import { Tabbar, TabbarItem } from 'vant';
 
+// tabbar底部导航
+import { Tabbar, TabbarItem } from 'vant';
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
+
+// loading加载
+import{Loading} from 'vant';
+Vue.use(Loading);

@@ -4,6 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router);
 
 import Dashboard from '../views/dashboard/Dashboard'
+// 懒加载
 const Home =()=>import('./../views/home/Home')
 const Category =()=>import('./../views/category/Category')
 const Cart =()=>import('./../views/cart/Cart')
