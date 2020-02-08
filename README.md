@@ -24,3 +24,7 @@ rem配置,swiper实现轮播图,vant实现加载动画(数据请求完成后, �
 ```
 nav导航面板样式和数据请求(同swiper数据请求)
 ```
+## 2020/2/8
+```
+限时抢购面板样式和数据请求(FlashSale和FlashSaleItem)
+```
