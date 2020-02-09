@@ -9,6 +9,8 @@
       <Nav :nav_list="nav_list"></Nav>
       <!--限时抢购-->
       <FlashSale :flash_sale_product_list="flash_sale_product_list"></FlashSale>
+      <!--猜你喜欢-->
+      <YouLike :you_like_product_list="you_like_product_list"></YouLike>
     </div>
     <van-loading v-else type="spinner" color="#75a342" style="position:absolute;left:50%;top:40%;transform:translate(-50%);">小赖正在拼命加载中...</van-loading>
   </div>
@@ -19,6 +21,7 @@ import Header from './components/header/Header'
 import Swiper from './components/swiper/Swiper'
 import Nav from './components/nav/Nav'
 import FlashSale from "./components/flashsale/FlashSale";
+import YouLike from "./components/youLike/YouLike";
 
 
 import {getHomeData} from './../../service/api/index'
@@ -32,6 +35,8 @@ export default {
       nav_list:[],
       // 限时抢购数据
       flash_sale_product_list:[],
+      // 猜你喜欢数据
+      you_like_product_list:[],
       // 是否显示加载过程
       showLoading:true,
     }
@@ -40,7 +45,8 @@ export default {
     Header,
     Swiper,
     Nav,
-    FlashSale
+    FlashSale,
+    YouLike
   },
   created(){
     // 接收请求
@@ -53,6 +59,8 @@ export default {
         this.nav_list=response.data.list[2].icon_list;
         // 限时抢购数据
         this.flash_sale_product_list=response.data.list[3].product_list;
+        // 猜你喜欢数据
+        this.you_like_product_list=response.data.list[12].product_list;
         // 数据请求完成,隐藏加载页面
         this.showLoading=false;
       }
