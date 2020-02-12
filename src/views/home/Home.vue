@@ -11,19 +11,24 @@
       <FlashSale :flash_sale_product_list="flash_sale_product_list"></FlashSale>
       <!--猜你喜欢-->
       <YouLike :you_like_product_list="you_like_product_list"></YouLike>
+      <!--回到顶部-->
+      <MarkPage v-show="showBackStatus" :scrollToTop="scrollToTop"></MarkPage>
     </div>
     <van-loading v-else type="spinner" color="#75a342" style="position:absolute;left:50%;top:40%;transform:translate(-50%);">小赖正在拼命加载中...</van-loading>
   </div>
 </template>
 
 <script>
+// 组件
 import Header from './components/header/Header'
 import Swiper from './components/swiper/Swiper'
 import Nav from './components/nav/Nav'
 import FlashSale from "./components/flashsale/FlashSale";
 import YouLike from "./components/youLike/YouLike";
-
-
+import MarkPage from "./components/markPage/MarkPage";
+// 全局函数
+import {showBack,animate} from "../../config/global";
+// 数据请求函数
 import {getHomeData} from './../../service/api/index'
 export default {
   name: 'Home',
@@ -39,6 +44,8 @@ export default {
       you_like_product_list:[],
       // 是否显示加载过程
       showLoading:true,
+      // 是否显示返回顶部
+      showBackStatus:false
     }
   },
   components:{
@@ -46,7 +53,8 @@ export default {
     Swiper,
     Nav,
     FlashSale,
-    YouLike
+    YouLike,
+    MarkPage
   },
   created(){
     // 接收请求
@@ -61,8 +69,13 @@ export default {
         this.flash_sale_product_list=response.data.list[3].product_list;
         // 猜你喜欢数据
         this.you_like_product_list=response.data.list[12].product_list;
+
         // 数据请求完成,隐藏加载页面
         this.showLoading=false;
+        // 执行判断是否显示回到顶部函数
+        showBack((status)=>{
+          this.showBackStatus=status;
+        })
       }
     }).catch(error=>{
       console.log(error);
@@ -72,7 +85,11 @@ export default {
 
   },
   methods:{
-
+    // 缓动动画滚回顶部
+    scrollToTop(){
+      let docB=document.documentElement||document.body;
+      animate(docB,{scrollTop:'0'},800,'ease-out');
+    }
   },
  }
 </script>

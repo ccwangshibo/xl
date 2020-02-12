@@ -14,7 +14,7 @@ export default function ajax(url='',params={},type='get'){
       //   paramsStr+=key+'='+params[key]+'&'
       // })
       // 发送get请求
-      promise=axios.get(url,params);
+      promise=axios.get(url,{params:{}});
     }else if(type=='post'){
       // 发送post请求
       promise=axios.post(url,params);
