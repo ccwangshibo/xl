@@ -57,34 +57,58 @@ export default {
     MarkPage
   },
   created(){
-    // 接收请求
-    getHomeData().then((response)=>{
-      if(response.success){
-        console.log(response.data)
-        // 轮播图数据
-        this.swiper_list=response.data.list[0].icon_list;
-        // nav导航数据
-        this.nav_list=response.data.list[2].icon_list;
-        // 限时抢购数据
-        this.flash_sale_product_list=response.data.list[3].product_list;
-        // 猜你喜欢数据
-        this.you_like_product_list=response.data.list[12].product_list;
-
-        // 数据请求完成,隐藏加载页面
-        this.showLoading=false;
-        // 执行判断是否显示回到顶部函数
-        showBack((status)=>{
-          this.showBackStatus=status;
-        })
-      }
-    }).catch(error=>{
-      console.log(error);
-    })
+    // async实现接收请求
+    this.reqData();
+    // // then实现接收请求
+    // getHomeData().then((response)=>{
+    //   if(response.success){
+    //     console.log(response.data)
+    //     // 轮播图数据
+    //     this.swiper_list=response.data.list[0].icon_list;
+    //     // nav导航数据
+    //     this.nav_list=response.data.list[2].icon_list;
+    //     // 限时抢购数据
+    //     this.flash_sale_product_list=response.data.list[3].product_list;
+    //     // 猜你喜欢数据
+    //     this.you_like_product_list=response.data.list[12].product_list;
+    //
+    //     // 数据请求完成,隐藏加载页面
+    //     this.showLoading=false;
+    //     // 执行判断是否显示回到顶部函数
+    //     showBack((status)=>{
+    //       this.showBackStatus=status;
+    //     })
+    //   }
+    // }).catch(error=>{
+    //   console.log(error);
+    // });
   },
   mounted() {
 
   },
   methods:{
+    // 请求数据
+    async reqData(){
+      let res=await getHomeData();
+      if(res.success){
+        // 轮播图数据
+        this.swiper_list=res.data.list[0].icon_list;
+        // nav导航数据
+        this.nav_list=res.data.list[2].icon_list;
+        // 限时抢购数据
+        this.flash_sale_product_list=res.data.list[3].product_list;
+        // 猜你喜欢数据
+        this.you_like_product_list=res.data.list[12].product_list;
+
+        // 数据请求完成,隐藏加载页面
+        this.showLoading=false;
+
+        // 执行判断是否显示回到顶部函数
+        showBack((status)=>{
+          this.showBackStatus=status;
+        })
+      }
+    },
     // 缓动动画滚回顶部
     scrollToTop(){
       let docB=document.documentElement||document.body;

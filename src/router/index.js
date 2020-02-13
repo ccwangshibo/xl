@@ -28,12 +28,15 @@ export default new Router({
         {
           path:'home',
           name:'home',
-          component:Home
+          component:Home,
+          // 添加meta属性, 避免不必要的请求
+          meta:{keepAlive:true}
         },
         {
           path:"category",
           name:'category',
-          component:Category
+          component:Category,
+          meta:{keepAlive:true}
         },
         {
           path:"cart",

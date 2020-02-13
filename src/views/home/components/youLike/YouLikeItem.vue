@@ -10,8 +10,8 @@
 				</div>
 				<div class="priceWrapper">
 					<div class="priceInfo">
-						<div class="price">{{product.price}}</div>
-						<div class="originPrice">{{product.origin_price}}</div>
+						<div class="price">{{product.price|moneyFormat}}</div>
+						<div class="originPrice">{{product.origin_price|moneyFormat}}</div>
 					</div>
 					<div class="iconCartWrapper">
 						<svg viewBox="0 0 52 52" class="icon iconCart">

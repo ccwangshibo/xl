@@ -52,100 +52,100 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.icon{
-  fill: #999;
-  width: 1rem;
-  height: 1rem;
-}
-.wrapper{
-  width: 100%;
-  height: 3.125rem;
-  line-height: 3.125rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  box-sizing: border-box;
-  background: white;
-  border-bottom: 1px solid #eee;
-  border-top: 1px solid #eee;
-  z-index: 2;
-}
-.locationWrapper{
-  float: left;
-  width: 40%;
-  height: 3.125rem;
-  /* 文本不换行 */
-  white-space: nowrap;
-  /* opacity: 1; */
-}
-.locationWrapper .address{
-  display: inline-block;
-  font-size: 0.8rem;
-  width: 65%;
-  padding-left: 2rem;
-  white-space: nowrap;
-  /* 超出显示省略符号 */
-  text-overflow: ellipsis;
-}
-.locationWrapper .iconArrow{
-  vertical-align: middle;
-}
-.iconLocation{
-  position: absolute;
-  left: 0.3rem;
-  top: 1.0625rem;
-  width: 1.875rem;
-  height: 1rem;
-}
-.searchWrapper{
-  position: absolute;
-  right: 2%;
-  top: 0.625rem;
-  width: 50%;
-  height: 3.125rem;
-  box-sizing: border-box;
-}
-.searchWrapper .searchContent{
-  float: right;
-  border-radius: 3.125rem;
-  width: 100%;
-  height: 1.875rem;
-  line-height: 1.875rem;
-  text-align: center;
-  background: #F2F2F2;
-}
-.iconSearchWrapper{
-  display: inline-block;
-  width: 1.25rem;
-  height: 100%;
-}
-.iconSearch {
-  margin-top: 0.3125rem;
-  width: 1.25rem;
-  height: 1.25rem;
-}
-.searchPrompt{
-  display: inline-block;
-  font-size: 0.875rem;
-  vertical-align: top;
-  text-align: center;
-  color: #999;
-}
-@media (min-width: 320px) {
-  .searchWrapper {
-      width: 55%;
+  .icon{
+    fill: #999;
+    width: 1rem;
+    height: 1rem;
   }
-}
+  .wrapper{
+    width: 100%;
+    height: 3.125rem;
+    line-height: 3.125rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    background: white;
+    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
+    z-index: 2;
+  }
+  .locationWrapper{
+    float: left;
+    width: 40%;
+    height: 3.125rem;
+    /* 文本不换行 */
+    white-space: nowrap;
+    /* opacity: 1; */
+  }
+  .locationWrapper .address{
+    display: inline-block;
+    font-size: 0.8rem;
+    width: 65%;
+    padding-left: 2rem;
+    white-space: nowrap;
+    /* 超出显示省略符号 */
+    text-overflow: ellipsis;
+  }
+  .locationWrapper .iconArrow{
+    vertical-align: middle;
+  }
+  .iconLocation{
+    position: absolute;
+    left: 0.3rem;
+    top: 1.0625rem;
+    width: 1.875rem;
+    height: 1rem;
+  }
+  .searchWrapper{
+    position: absolute;
+    right: 2%;
+    top: 0.625rem;
+    width: 50%;
+    height: 3.125rem;
+    box-sizing: border-box;
+  }
+  .searchWrapper .searchContent{
+    float: right;
+    border-radius: 3.125rem;
+    width: 100%;
+    height: 1.875rem;
+    line-height: 1.875rem;
+    text-align: center;
+    background: #F2F2F2;
+  }
+  .iconSearchWrapper{
+    display: inline-block;
+    width: 1.25rem;
+    height: 100%;
+  }
+  .iconSearch {
+    margin-top: 0.3125rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .searchPrompt{
+    display: inline-block;
+    font-size: 0.875rem;
+    vertical-align: top;
+    text-align: center;
+    color: #999;
+  }
+  @media (min-width: 320px) {
+    .searchWrapper {
+        width: 55%;
+    }
+  }
 
-@media (min-width: 375px) {
-  .searchWrapper {
-      width: 57%;
+  @media (min-width: 375px) {
+    .searchWrapper {
+        width: 57%;
+    }
   }
-}
 
-@media (min-width: 414px) {
-  .searchWrapper {
-      width: 62%;
+  @media (min-width: 414px) {
+    .searchWrapper {
+        width: 62%;
+    }
   }
-}
 </style>
