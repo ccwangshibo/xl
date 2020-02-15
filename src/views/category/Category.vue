@@ -4,6 +4,7 @@
 		<Header></Header>
 		<!--分类界面-->
 		<div class="listWrapper" v-if="!showLoading">
+			<!--左侧目录-->
 			<div class="leftWrapper">
 				<ul class="wrapper">
 					<li class="categoryItem"
@@ -17,9 +18,12 @@
 					</li>
 				</ul>
 			</div>
+			<!--右侧详情-->
+			<ContentView :categoriesDetail="categoriesDetail"></ContentView>
 		</div>
+		<!--加载动画-->
 		<van-loading
-				v-else type="spinner" color="#75a342" style="position:absolute;left:50%;top:40%;transform:translate(-50%);"
+			v-else type="spinner" color="#75a342" style="position:absolute;left:50%;top:40%;transform:translate(-50%);"
 		>
 			小赖正在拼命加载中...
 		</van-loading>
@@ -28,6 +32,7 @@
 
 <script>
 	import Header from "./components/Header";
+	import ContentView from "./components/ContentView";
 
 	// BScroll组件
 	import BScroll from 'better-scroll'
@@ -50,42 +55,49 @@
 		},
 		props: {},
 		components: {
-			Header
+			Header,
+			ContentView
 		},
 		created() {
-		//	获取分类数据
+		//获取分类数据
 			this.initData()
 		},
 		methods: {
-			//  一 .发送异步请求获取分类数据
+			// 一 .发送异步请求获取分类数据
 			async initData(){
-				//  1.获取左边分类目录数据
+				// 1.获取左边分类目录数据
 				let leftRes=await getCategories();
 				// console.log(leftRes);
 				if(leftRes.success){
 					this.categories=leftRes.data.cate;
 				};
-				//	2.隐藏加载动画界面
+				// 2.获取右侧分类详情数据
+				let rightRes=await getCategoriesDetail('/lk001')
+				// console.log(rightRes);
+				if(rightRes.success){
+					this.categoriesDetail=rightRes.data.cate;
+				}
+				// 3.隐藏加载动画界面
 				this.showLoading=false;
-				//  3.初始化滚动框架
+				// 4.初始化滚动框架
 				this.$nextTick(()=>{
 					this.leftScroll=new BScroll('.leftWrapper',{probeType:3})
 				})
 			},
-			//  二. 处理左侧点击事件
+			// 二. 处理左侧点击事件
 			async clickLeftLi(i){
-				//  1.当前index赋值给动态class绑定selected
+				// 1.当前index赋值给动态class绑定selected
 				this.currentIndex=i;
-				//  2.获取当前点击元素
+				// 2.获取当前点击元素
 				let el=this.$refs.menuList[i];
-				//  3.滚动到当前点击元素
+				// 3.滚动到当前点击元素
 				this.leftScroll.scrollToElement(el,400);
-				//  4.发送右侧详情页面数据请求
-				let rightRes=await getCategoriesDetail('/lk001');
-				console.log(rightRes);
-				if(rightRes.success){
-					this.categoriesDetail=rightRes.data.cate;
-				}
+				// 4.发送右侧详情页面数据请求
+				// let rightRes=await getCategoriesDetail('/lk001');
+				// console.log(rightRes);
+				// if(rightRes.success){
+				// 	this.categoriesDetail=rightRes.data.cate;
+				// }
 			}
 		},
 	}
@@ -106,6 +118,7 @@
 		bottom: 3rem;
 		overflow: hidden;
 		width: 100%;
+		height: 100%;
 	}
 
   .leftWrapper{

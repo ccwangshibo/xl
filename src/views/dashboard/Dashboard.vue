@@ -47,7 +47,7 @@
 		name: 'Dashboard',
 		data() {
 			return {
-				active: 0,
+				active: parseInt(sessionStorage.getItem('tabBarItemIndex'))||0,
 				home_icon: {
 					active: require('@/images/tabbar/home_selected.png'),
 					inactive: require('@/images/tabbar/home_default.png')
@@ -64,6 +64,12 @@
 					active: require('@/images/tabbar/mine_selected.png'),
 					inactive: require('@/images/tabbar/mine_default.png')
 				},
+			}
+		},
+		watch:{
+			active(val){
+				// 设置当前tabBar索引缓存到本地
+				sessionStorage.setItem('tabBarItemIndex',val)
 			}
 		},
 		props: {},

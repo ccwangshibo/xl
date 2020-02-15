@@ -43,3 +43,8 @@ nav导航组件样式和数据请求(同swiper数据请求)
 3. 路由的keepAlive属性
 4. BScroll库实现category左侧点击切换(包含数据请求)
 ```
+## 2020/2/15
+```
+1. category界面与数据
+2. tabBar选项卡的active缓存
+```
