@@ -26,10 +26,18 @@ import Nav from './components/nav/Nav'
 import FlashSale from "./components/flashsale/FlashSale";
 import YouLike from "./components/youLike/YouLike";
 import MarkPage from "./components/markPage/MarkPage";
+
 // 全局函数
 import {showBack,animate} from "../../config/global";
 // 数据请求函数
 import {getHomeData} from './../../service/api/index'
+// 引入通知插件
+import PubSub from 'pubsub-js'
+// 引入vant组件消息提示
+import {Toast} from 'vant'
+// 引入Vuex
+import {mapMutations} from 'vuex'
+import {Add_GOODS} from "../../store/mutations-type";
 export default {
   name: 'Home',
   data() { 
@@ -56,35 +64,27 @@ export default {
     YouLike,
     MarkPage
   },
+  mounted() {
+    // 消息订阅, 添加到购物车
+    PubSub.subscribe('homeAddToCart',(msg,goods)=>{
+      if(msg==='homeAddToCart'){
+        this.ADD_GOODS({
+          goodsId:goods.id,
+          goodsName:goods.name,
+          goodsImage:goods.small_image,
+          goodsPrice:goods.price
+        });
+      };
+      // 添加成功提示
+      Toast({
+        message:"商品成功加入购物车!",
+        duration:1000
+      })
+    })
+  },
   created(){
     // async实现接收请求
-    this.reqData();
-    // // then实现接收请求
-    // getHomeData().then((response)=>{
-    //   if(response.success){
-    //     console.log(response.data)
-    //     // 轮播图数据
-    //     this.swiper_list=response.data.list[0].icon_list;
-    //     // nav导航数据
-    //     this.nav_list=response.data.list[2].icon_list;
-    //     // 限时抢购数据
-    //     this.flash_sale_product_list=response.data.list[3].product_list;
-    //     // 猜你喜欢数据
-    //     this.you_like_product_list=response.data.list[12].product_list;
-    //
-    //     // 数据请求完成,隐藏加载页面
-    //     this.showLoading=false;
-    //     // 执行判断是否显示回到顶部函数
-    //     showBack((status)=>{
-    //       this.showBackStatus=status;
-    //     })
-    //   }
-    // }).catch(error=>{
-    //   console.log(error);
-    // });
-  },
-  mounted() {
-
+    this.reqData()
   },
   methods:{
     // 请求数据
@@ -113,7 +113,9 @@ export default {
     scrollToTop(){
       let docB=document.documentElement||document.body;
       animate(docB,{scrollTop:'0'},800,'ease-out');
-    }
+    },
+    // vuex方式
+    ...mapMutations(['ADD_GOODS'])
   },
  }
 </script>
