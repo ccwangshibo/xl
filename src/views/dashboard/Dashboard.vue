@@ -17,7 +17,7 @@
 						:src="props.active ? category_icon.active : category_icon.inactive"
 				>
 			</van-tabbar-item>
-			<van-tabbar-item replace to="/dashboard/cart">
+			<van-tabbar-item replace to="/dashboard/cart" :info="goodsNum>0?goodsNum:''">
 				<span>购物车</span>
 				<img
 						slot="icon"
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+	import {mapState,mapMutations} from 'vuex'
 	export default {
 		name: 'Dashboard',
 		data() {
@@ -72,12 +73,30 @@
 				sessionStorage.setItem('tabBarItemIndex',val)
 			}
 		},
-		props: {},
-		components: {},
-		mounted() {
-
+		computed:{
+			...mapState(['shopCart']),
+			goodsNum(){
+				// shopCart数量不为空
+				if(this.shopCart){
+					let num=0;
+					// 取对象的值Object.values()
+					// 取对象的键Object.keys()
+					Object.values(this.shopCart).forEach((goods,index)=>{
+						num+=goods.num;
+					})
+					return num;
+				}else{
+					return 0;
+				}
+			}
 		},
-		methods: {},
+		mounted() {
+			// 挂载完成时触发初始化购物车
+			this.INIT_SHOP_CART();
+		},
+		methods: {
+			...mapMutations(['INIT_SHOP_CART'])
+		},
 	}
 </script>
 

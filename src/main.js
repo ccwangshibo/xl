@@ -5,13 +5,14 @@ import store from './store/index'
 
 // 1. 配置FastClick
 import FastClick from 'fastclick'
+
 if ('addEventListener' in document) {
-  document.addEventListener('DOMContentLoaded', function () {
-    FastClick.attach(document.body);
-  }, false);
+	document.addEventListener('DOMContentLoaded', function () {
+		FastClick.attach(document.body);
+	}, false);
 }
 
-// 2. 引入全局样式
+// 2.引入全局样式
 import '@/style/common.less'
 
 // 3.引入全局组件-vant
@@ -24,7 +25,7 @@ import '@/config/rem.js'
 import '@/config/filters.js'
 
 new Vue({
-  router,
-  store, //挂载store对象
-  render: h => h(App)
+	router,
+	store, //挂载store对象
+	render: h => h(App)
 }).$mount('#app')

@@ -63,26 +63,22 @@
 </template>
 
 <script>
-export default {
-  name: 'Cart',
-  data() { 
-    return {
+  import {mapState} from 'vuex'
+  export default {
+    name: 'Cart',
+    data() {
+      return {
 
+      }
+    },
+    methods:{
+
+    },
+    computed:{
+      // 购物车数据
+      ...mapState(['shopCart'])
     }
-  },
-  props: {
-
-  },
-  components:{
-
-  },
-  mounted() {
-
-  },
-  methods:{
-
-  },
- }
+   }
 </script>
 
 <style lang="less" scoped>

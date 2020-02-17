@@ -46,7 +46,6 @@ export const showBack = (callback) => {
 		}
 	}
 }
-
 // 获取样式
 export const getStyle = (element, attr, NumberMode = 'int') => {
 	let target;
@@ -182,4 +181,23 @@ export const animate = (element, target, duration = 400, mode = 'ease-out', call
 			}
 		})
 	}, 20);
+};
+
+// localStorage本地化存储功能封装
+export const setStorage = (name, content) => {
+	if (!name) return;
+	if (typeof content !== "string") {
+		content = JSON.stringify(content); // 转为字符串
+	}
+	window.localStorage.setItem(name, content); // 存储
+};
+// 本地化获取
+export const getStorage = (name) => {
+	if (!name) return;
+	return window.localStorage.getItem(name);
+};
+// 本地化删除
+export const removeStorage = (name) => {
+	if (!name) return;
+	return window.localStorage.removeItem(name);
 };
