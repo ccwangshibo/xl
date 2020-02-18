@@ -77,7 +77,7 @@
 					this.ADD_GOODS({
 						goodsId: goods.id,
 						goodsName: goods.name,
-						goodsImage: goods.small_image,
+						smallImage: goods.small_image,
 						goodsPrice: goods.price
 					});
 				}

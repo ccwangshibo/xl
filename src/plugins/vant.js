@@ -12,3 +12,7 @@ Vue.use(Loading);
 // 消息提示
 import{Toast} from 'vant';
 Vue.use(Toast);
+
+//弹出框
+import {Dialog} from 'vant';
+Vue.use(Dialog);

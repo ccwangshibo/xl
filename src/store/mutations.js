@@ -1,4 +1,4 @@
-import {Add_GOODS, INIT_SHOP_CART} from './mutations-type'
+import {Add_GOODS, INIT_SHOP_CART, REDUCE_GOODS} from './mutations-type'
 
 import {setStorage, getStorage} from "../config/global";
 
@@ -16,10 +16,10 @@ export default {
 				"name": goodsName,
 				"small_image": smallImage,
 				"price": goodsPrice,
-				"isChecked": true
+				"checked": true
 			}
 		}
-		// 1.2返回新对象
+		// 1.2返回新对象(对象解构形式)
 		state.shopCart = {...shopCart};
 		// 1.3添加数据到本地
 		setStorage('shopCart', state.shopCart)
@@ -32,5 +32,20 @@ export default {
 		if (initCart) {
 			state.shopCart = JSON.parse(initCart)
 		}
+	},
+	// 3.移出购物车数据
+	[REDUCE_GOODS](state,goodsId){
+		let shopCart=state.shopCart;
+		let goods=shopCart[goodsId]
+		// 3.1判断商品数量
+		if(goods['num']>1){
+			goods['num']--
+		}else {
+			delete shopCart[goodsId];
+		}
+		// 3.2更新数据
+		state.shopCart={...shopCart}
+		// 3.3数据添加到本地
+		setStorage('shopCart',state.shopCart)
 	}
 }
