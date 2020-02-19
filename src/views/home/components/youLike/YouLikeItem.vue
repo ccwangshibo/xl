@@ -46,7 +46,6 @@
 			// 发送消息
 			addToCart(goods){
 				PubSub.publish('homeAddToCart',goods)
-				console.log(goods);
 			}
 		}
 	}

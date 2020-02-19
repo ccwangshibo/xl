@@ -9,7 +9,8 @@
 			<!--商品界面-->
 			<div class="productWrapper" v-for="(product,i) of shopCart" :key="i">
 				<div class="left">
-					<a href="#" class="cartCheckbox" checked="true"></a>
+					<a href="#" class="cartCheckbox" :checked="product.checked"
+						 @click.stop="singleProductSelected(product.id)"></a>
 				</div>
 				<div class="center">
 					<img :src="product.small_image" alt="">
@@ -29,7 +30,7 @@
 			<!--底部-->
 			<div class="footer">
 				<div class="footerLeft">
-					<a href="#" class="cartCheckbox"></a>
+					<a href="#" class="cartCheckbox" :checked="isSelectedAll" @click.stop="allSelected(isSelectedAll)"></a>
 					<span>全选</span>
 					<div class="totalPrice">
 						合计:&nbsp;<span class="price">12345.99</span>
@@ -53,18 +54,22 @@
 			return {}
 		},
 		methods: {
-			...mapMutations(['REDUCE_GOODS', 'ADD_GOODS']),
+			...mapMutations([
+				'REDUCE_GOODS',
+				'ADD_GOODS',
+				'SELECT_SINGLE_GOODS',
+				'SELECT_ALL_GOODS']),
 			// 1.移出购物车功能
 			removeOutCart(goodsId, goodsNum) {
 				if (goodsNum > 1) {
 					// 调用vuex中的移出购物车
-					this.REDUCE_GOODS(goodsId)
+					this.REDUCE_GOODS({goodsId})
 				} else {
 					Dialog.confirm({
 						title: '温馨提示',
 						message: '确认将商品移出购物车?'
 					}).then(() => {
-						this.REDUCE_GOODS(goodsId) // on confirm
+						this.REDUCE_GOODS({goodsId}) // on confirm
 					}).catch(() => {
 						// on cancel
 					});
@@ -73,11 +78,30 @@
 			// 2.添加购物车
 			addToCart(goodsId, goodsName, smallImage, goodsPrice) {
 				this.ADD_GOODS({goodsId, goodsName, smallImage, goodsPrice})
+			},
+			// 3.改变单个商品的选中状态
+			singleProductSelected(goodsId) {
+				this.SELECT_SINGLE_GOODS({goodsId})
+			},
+			// 4.全选和取消全选
+			allSelected(isSelected) {
+				this.SELECT_ALL_GOODS({isSelected})
 			}
 		},
 		computed: {
 			// 购物车数据
-			...mapState(['shopCart'])
+			...mapState(['shopCart']),
+			// 判断是否全选(全选按钮,与vuex无关)
+			isSelectedAll() {
+				let tag = true;
+				// 遍历购物车中的数据
+				Object.values(this.shopCart).forEach((goods, index) => {
+					if (!goods.checked) {
+						tag = false
+					}
+				})
+				return tag;
+			}
 		}
 	}
 </script>

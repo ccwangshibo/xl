@@ -1,5 +1,12 @@
-import {Add_GOODS, INIT_SHOP_CART, REDUCE_GOODS} from './mutations-type'
+import {
+	Add_GOODS,
+	INIT_SHOP_CART,
+	REDUCE_GOODS,
+	SELECT_SINGLE_GOODS,
+	SELECT_ALL_GOODS
+} from './mutations-type'
 
+import Vue from 'vue'
 import {setStorage, getStorage} from "../config/global";
 
 export default {
@@ -16,7 +23,7 @@ export default {
 				"name": goodsName,
 				"small_image": smallImage,
 				"price": goodsPrice,
-				"checked": true
+				"checked": false
 			}
 		}
 		// 1.2返回新对象(对象解构形式)
@@ -34,18 +41,46 @@ export default {
 		}
 	},
 	// 3.移出购物车数据
-	[REDUCE_GOODS](state,goodsId){
-		let shopCart=state.shopCart;
-		let goods=shopCart[goodsId]
+	[REDUCE_GOODS](state, {goodsId}) {
+		let shopCart = state.shopCart;
+		let goods = shopCart[goodsId];
 		// 3.1判断商品数量
-		if(goods['num']>1){
+		if (goods['num'] > 1) {
 			goods['num']--
-		}else {
+		} else {
 			delete shopCart[goodsId];
 		}
 		// 3.2更新数据
-		state.shopCart={...shopCart}
+		state.shopCart = {...shopCart};
 		// 3.3数据添加到本地
-		setStorage('shopCart',state.shopCart)
+		setStorage('shopCart', state.shopCart)
+	},
+	// 4.单个商品的选中状态改变
+	[SELECT_SINGLE_GOODS](state, {goodsId}) {
+		let shopCart = state.shopCart;
+		let goods = shopCart[goodsId];
+		// 4.1如果被选中, 取反
+		if (goods.checked) {
+			goods.checked = !goods.checked;
+		} else {
+			// 设置属性为true
+			Vue.set(goods, "checked", true);
+		}
+		// 4.2更新数据
+		state.shopCart = {...shopCart};
+		// 4.3数据添加到本地
+		setStorage('shopCart', state.shopCart)
+	},
+	// 5.全选和取消全选
+	[SELECT_ALL_GOODS](state, {isSelected}) {
+		let shopCart = state.shopCart;
+		// 5.1遍历购物车对象的值取反
+		Object.values(shopCart).forEach((goods, index) => {
+			goods.checked = !isSelected;
+		});
+		// 5.2更新数据
+		state.shopCart = {...shopCart};
+		// 5.3数据添加到本地
+		setStorage('shopCart', state.shopCart)
 	}
 }
