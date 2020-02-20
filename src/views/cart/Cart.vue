@@ -3,7 +3,7 @@
 		<!--标题栏-->
 		<div class="titleWrapper">
 			<div class="title">购物车</div>
-			<button class="clearCart">清空购物车</button>
+			<button class="clearCart" @click="clearCart">清空购物车</button>
 		</div>
 		<div class="contentWrapper">
 			<!--商品界面-->
@@ -33,11 +33,11 @@
 					<a href="#" class="cartCheckbox" :checked="isSelectedAll" @click.stop="allSelected(isSelectedAll)"></a>
 					<span>全选</span>
 					<div class="totalPrice">
-						合计:&nbsp;<span class="price">12345.99</span>
+						合计:&nbsp;<span class="price">{{totalPrice|moneyFormat}}</span>
 					</div>
 				</div>
 				<div class="footerRight">
-					<button class="pay">去结算(13)</button>
+					<button class="pay" @click="$router.push('/confirmOrder')">去结算({{payCount}})</button>
 				</div>
 			</div>
 		</div>
@@ -58,7 +58,9 @@
 				'REDUCE_GOODS',
 				'ADD_GOODS',
 				'SELECT_SINGLE_GOODS',
-				'SELECT_ALL_GOODS']),
+				'SELECT_ALL_GOODS',
+				'CLEAR_CART'
+			]),
 			// 1.移出购物车功能
 			removeOutCart(goodsId, goodsNum) {
 				if (goodsNum > 1) {
@@ -86,14 +88,36 @@
 			// 4.全选和取消全选
 			allSelected(isSelected) {
 				this.SELECT_ALL_GOODS({isSelected})
+			},
+			// 5.清空购物车
+			clearCart(){
+				Dialog.confirm({
+					title:"温馨提示",
+					message:"确定要清空购物车吗?"
+				}).then(()=>{
+					this.CLEAR_CART();
+				}).catch(()=>{
+					// nothing to do
+				})
 			}
 		},
 		computed: {
 			// 购物车数据
 			...mapState(['shopCart']),
-			// 判断是否全选(全选按钮,与vuex无关)
+			// 0.计算结算商品数量(选中的商品)
+			payCount() {
+				let selectedGoodsCount = 0;
+				Object.values(this.shopCart).forEach((goods, index) => {
+					if (goods.checked) {
+						selectedGoodsCount += 1
+					}
+				})
+				return selectedGoodsCount
+			},
+			// 1.判断是否全选(全选按钮,与vuex无关)
 			isSelectedAll() {
-				let tag = true;
+				// 判断当前结算商品数量是否为0
+				let tag = this.payCount > 0;
 				// 遍历购物车中的数据
 				Object.values(this.shopCart).forEach((goods, index) => {
 					if (!goods.checked) {
@@ -101,6 +125,18 @@
 					}
 				})
 				return tag;
+			},
+			// 2.计算购物车中商品的总价
+			totalPrice() {
+				let selectedGoodsPrice = 0;
+				// 2.1遍历购物车中的数据
+				Object.values(this.shopCart).forEach((goods, index) => {
+					if (goods.checked) {
+						// 2.2如果选中就累加
+						selectedGoodsPrice += goods.num * goods.price
+					}
+				})
+				return selectedGoodsPrice;
 			}
 		}
 	}

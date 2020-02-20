@@ -3,7 +3,8 @@ import {
 	INIT_SHOP_CART,
 	REDUCE_GOODS,
 	SELECT_SINGLE_GOODS,
-	SELECT_ALL_GOODS
+	SELECT_ALL_GOODS,
+	CLEAR_CART
 } from './mutations-type'
 
 import Vue from 'vue'
@@ -23,7 +24,7 @@ export default {
 				"name": goodsName,
 				"small_image": smallImage,
 				"price": goodsPrice,
-				"checked": false
+				"checked": true
 			}
 		}
 		// 1.2返回新对象(对象解构形式)
@@ -81,6 +82,12 @@ export default {
 		// 5.2更新数据
 		state.shopCart = {...shopCart};
 		// 5.3数据添加到本地
+		setStorage('shopCart', state.shopCart)
+	},
+	// 6.清空购物车
+	[CLEAR_CART](state) {
+		let shopCart = null;
+		state.shopCart = {...shopCart};
 		setStorage('shopCart', state.shopCart)
 	}
 }

@@ -13,6 +13,20 @@ Vue.use(Loading);
 import{Toast} from 'vant';
 Vue.use(Toast);
 
-//弹出框
+// 弹出框
 import {Dialog} from 'vant';
 Vue.use(Dialog);
+
+// NavBar
+import { NavBar } from 'vant';
+Vue.use(NavBar);
+
+// 添加地址
+import { ContactCard, ContactList, ContactEdit } from 'vant';
+Vue.use(ContactCard);
+Vue.use(ContactList);
+Vue.use(ContactEdit);
+
+//地址列表
+import { AddressList } from 'vant';
+Vue.use(AddressList);
