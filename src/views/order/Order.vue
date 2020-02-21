@@ -15,6 +15,40 @@
 				@click="chooseAddress"
 				style="margin-top: 3rem"
 		></van-contact-card>
+		<!--送达时间-->
+		<van-cell-group style="margin-top: 0.3rem">
+			<van-cell title="送达时间" value="请选择送达时间" is-link/>
+			<van-cell value="共3件" is-link center>
+				<!-- 使用 title 插槽来自定义标题 -->
+				<template slot="title">
+					<img src="./images/detail1.jpg" alt="" style="width: 3rem">
+					<img src="./images/detail1.jpg" alt="" style="width: 3rem">
+					<img src="./images/detail1.jpg" alt="" style="width: 3rem">
+				</template>
+			</van-cell>
+		</van-cell-group>
+		<!--支付方式-->
+		<van-cell-group style="margin-top: 0.3rem">
+			<van-cell title="支付方式" value="支付宝"/>
+		</van-cell-group>
+		<!--备注-->
+		<van-cell-group style="margin-top: 0.3rem">
+			<van-cell title="备注信息">
+				<input type="text" placeholder="选填，请备注您的需求">
+			</van-cell>
+		</van-cell-group>
+		<!--价格和配送费-->
+		<van-cell-group style="margin-top: 0.3rem">
+			<van-cell title="商品金额" value="99.99"/>
+			<van-cell title="配送费" value="0.00"/>
+		</van-cell-group>
+		<!--提交订单-->
+		<van-submit-bar
+				:price="3050"
+				button-text="提交订单"
+				@submit="onSubmit"
+				label="实付："
+		/>
 		<!--过渡跳转路由组件-->
 		<transition model="out-in" name="router-slider">
 			<router-view></router-view>
@@ -32,6 +66,9 @@
 			// 选择地址
 			chooseAddress() {
 				this.$router.push('/confirmOrder/myAddress')
+			},
+			onSubmit(){
+
 			}
 		}
 	}

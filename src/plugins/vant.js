@@ -27,6 +27,19 @@ Vue.use(ContactCard);
 Vue.use(ContactList);
 Vue.use(ContactEdit);
 
-//地址列表
+// 地址列表
 import { AddressList } from 'vant';
 Vue.use(AddressList);
+
+// 编辑地址
+import { AddressEdit } from 'vant';
+Vue.use(AddressEdit);
+
+// 单元格
+import { Cell, CellGroup } from 'vant';
+Vue.use(Cell);
+Vue.use(CellGroup);
+
+// 提交订单
+import { SubmitBar } from 'vant';
+Vue.use(SubmitBar);

@@ -19,7 +19,9 @@ const Mine = () => import('./../views/mine/Mine');
 
 // 其他组件
 const Order = () => import('../views/order/Order');
-const MyAddress=()=>import('../views/order/children/MyAddress')
+const MyAddress = () => import('../views/order/children/MyAddress');
+const AddAddress = () => import('../views/order/children/children/addAddress');
+const EditAddress = () => import('../views/order/children/children/editAddress');
 
 export default new Router({
 	routes: [
@@ -66,12 +68,16 @@ export default new Router({
 			path: '/confirmOrder',
 			name: 'order',
 			component: Order,
-			children:[
+			children: [
 				// 我的地址
 				{
 					path: 'myAddress',
 					name: 'myAddress',
-					component: MyAddress
+					component: MyAddress,
+					children:[
+						{path:'addAddress',name:'addAddress',component:AddAddress},
+						{path:'editAddress',name:'addAddress',component:EditAddress}
+					]
 				}
 			]
 		}
