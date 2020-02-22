@@ -1,5 +1,5 @@
 <template>
-	<div id="cart">
+	<div id="cart" v-if="userInfo.token">
 		<!--标题栏-->
 		<div class="titleWrapper">
 			<div class="title">购物车</div>
@@ -42,9 +42,12 @@
 			</div>
 		</div>
 	</div>
+	<select-login v-else></select-login>
 </template>
 
 <script>
+	import SelectLogin from "../login/SelectLogin";
+
 	import {Dialog} from 'vant'
 	import {mapState, mapMutations} from 'vuex'
 
@@ -102,8 +105,8 @@
 			}
 		},
 		computed: {
-			// 购物车数据
-			...mapState(['shopCart']),
+			// 购物车和用户数据
+			...mapState(['shopCart','userInfo']),
 			// 0.计算结算商品数量(选中的商品)
 			payCount() {
 				let selectedGoodsCount = 0;
@@ -138,6 +141,9 @@
 				})
 				return selectedGoodsPrice;
 			}
+		},
+		components:{
+			SelectLogin
 		}
 	}
 </script>

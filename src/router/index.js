@@ -23,6 +23,9 @@ const MyAddress = () => import('../views/order/children/MyAddress');
 const AddAddress = () => import('../views/order/children/children/addAddress');
 const EditAddress = () => import('../views/order/children/children/editAddress');
 
+// 登录
+const Login = () => import('../views/login/Login')
+
 export default new Router({
 	routes: [
 		{
@@ -74,12 +77,14 @@ export default new Router({
 					path: 'myAddress',
 					name: 'myAddress',
 					component: MyAddress,
-					children:[
-						{path:'addAddress',name:'addAddress',component:AddAddress},
-						{path:'editAddress',name:'addAddress',component:EditAddress}
+					children: [
+						{path: 'addAddress', name: 'addAddress', component: AddAddress},
+						{path: 'editAddress', name: 'addAddress', component: EditAddress}
 					]
 				}
 			]
-		}
+		},
+		// 登录
+		{name:'login',path:'/login',component:Login}
 	]
 })
