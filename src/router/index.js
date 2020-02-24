@@ -79,7 +79,7 @@ export default new Router({
 					component: MyAddress,
 					children: [
 						{path: 'addAddress', name: 'addAddress', component: AddAddress},
-						{path: 'editAddress', name: 'addAddress', component: EditAddress}
+						{path: 'editAddress', name: 'editAddress', component: EditAddress}
 					]
 				}
 			]
