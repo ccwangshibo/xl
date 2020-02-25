@@ -24,18 +24,21 @@
 					<button v-else disabled class="getVerification">已发送({{countDown}}s)</button>
 					<input type="text" maxlength="6" placeholder="验证码" v-model="code">
 					<div class="loginHint">
-						温馨提示温馨提示温馨提示温馨提示温馨提示温馨提示温馨提示温馨提示温馨提示温馨提示
+						温馨提示: 此登录方式为测试环境, 手机验证码均为<span style="color:#2EB257">666666</span>, 请知悉
 					</div>
 				</div>
 				<!--用户名登录-->
 				<div class="loginMessage" v-else>
-					<input type="text" placeholder="请输入用户名">
-					<input type="password" placeholder="请输入密码">
+					<input type="text" placeholder="请输入用户名" v-model="userName">
+					<input v-if="pwdModel" type="password" placeholder="请输入密码" v-model="pwd">
+					<input v-else type="text" placeholder="请输入密码" v-model="pwd">
 					<div class="showPwd">
-						<img src="./images/show_pwd.png" alt="" width="20">
+						<img v-if="pwdModel" src="./images/hide_pwd.png" alt="" width="20" @click.prevent="dealPwdModel(true)">
+						<img v-else src="./images/show_pwd.png" alt="" width="20" @click.prevent="dealPwdModel(false)">
 					</div>
-					<input type="text" placeholder="请输入验证码">
-					<img src="./images/captcha.svg" alt="" class="captcha">
+					<input type="text" placeholder="请输入验证码" v-model="captcha">
+					<img src="http://demo.itlike.com/web/xlmc/api/captcha" alt="" class="captcha" width="30%"
+							 @click.prevent="getCaptcha" ref="captcha">
 				</div>
 				<button class="loginSubmit" @click.prevent="login">登录</button>
 			</form>
@@ -47,7 +50,10 @@
 <script>
 	import {Toast} from 'vant'
 
-	import {getPhoneCode, phoneCodeLogin} from "../../service/api";
+	import {getPhoneCode, phoneCodeLogin, pwdLogin} from "../../service/api";
+
+	import {mapMutations,mapActions} from 'vuex'
+	import {USER_INFO} from "../../store/mutations-type";
 
 	export default {
 		name: "Login",
@@ -57,6 +63,12 @@
 				phone: null, // 手机号默认为空
 				countDown: 0, // 倒计时
 				code: null, // 手机验证码
+				userInfo: null, // 用户信息
+
+				userName: null, // 用户名
+				pwd: null, // 密码
+				pwdModel: true, // 密码显示方式
+				captcha: null // 图形验证码
 			}
 		},
 		computed: {
@@ -65,6 +77,8 @@
 			}
 		},
 		methods: {
+			...mapMutations(['USER_INFO']),
+			...mapActions(['syncUserInfo']),
 			// 1.切换登录模式
 			selectLoginModel(flag) {
 				this.loginModel = flag;
@@ -89,8 +103,8 @@
 			// 3.登录
 			async login() {
 				// 3.1判断登录方式
-				if (this.loginModel) { // 手机号登录
-					// 3.1.1数据格式验证
+				if (this.loginModel) { // 3.2手机号登录
+					// 3.2.1数据格式验证
 					if (!this.phone) {
 						Toast({
 							message: '手机号不能为空!',
@@ -119,27 +133,63 @@
 						});
 						return;
 					}
-					// 3.1.2登录
+					// 3.2.2登录
 					let result = await phoneCodeLogin(this.phone, this.code);
 					if (result.success_code === 200) {
-						this.userInfo = result.data;
+						// 登录成功之后保存用户信息
+						this.syncUserInfo(result.data);
+						this.$router.back();
 					} else {
 						this.userInfo = {
 							message: "登录失败, 用户名或验证码错误!"
-						}
+						};
 					}
-				} else {
-
+				} else { // 3.3用户名密码登录
+					if (!this.userName) {
+						Toast({
+							message: '用户名不能为空!',
+							duration: 500
+						});
+						return;
+					} else if (!this.pwd) {
+						Toast({
+							message: '密码不能为空!',
+							duration: 500
+						});
+						return;
+					} else if (!this.captcha) {
+						Toast({
+							message: '验证码不能为空!',
+							duration: 500
+						});
+						return;
+					}
+					// 验证通过, 发送登录请求
+					let result = await pwdLogin(this.userName, this.pwd, this.captcha);
+					console.log(result)
+					if (result.success_code === 200) {
+						this.syncUserInfo(result.data);
+					} else {
+						this.userInfo = {
+							message: "登录失败, 暂时不允许用此方式登录!"
+						};
+					}
 				}
 				// 3.3登录的后续处理
 				if (!this.userInfo.token) { // 登录失败
 					Toast({
 						message: this.userInfo.message,
-						duration: 500
+						duration: 1000
 					})
-				} else { // 登录成功
-
 				}
+			},
+			// 4.切换密码显示方式
+			dealPwdModel(flag) {
+				this.pwdModel = !flag;
+			},
+			// 5.刷新图形验证码
+			getCaptcha() {
+				this.$set(this.$refs.captcha, 'src', 'http://demo.itlike.com/web/xlmc/api/captcha?time=' + new Date())
 			}
 		}
 	}
@@ -253,7 +303,7 @@
 	.captcha {
 		position: absolute;
 		right: 0;
-		margin-right: 2rem;
-		margin-top: 0.75rem;
+		margin-right: 3rem;
+		margin-top: 1rem;
 	}
 </style>

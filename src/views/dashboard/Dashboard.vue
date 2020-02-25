@@ -43,7 +43,7 @@
 </template>
 
 <script>
-	import {mapState,mapMutations} from 'vuex'
+	import {mapState,mapMutations,mapActions} from 'vuex'
 	export default {
 		name: 'Dashboard',
 		data() {
@@ -91,11 +91,14 @@
 			}
 		},
 		mounted() {
-			// 挂载完成时触发初始化购物车
+			// 0.自动登录
+			this.reqUserInfo();
+			// 1. 挂载完成时触发初始化购物车
 			this.INIT_SHOP_CART();
 		},
 		methods: {
-			...mapMutations(['INIT_SHOP_CART'])
+			...mapMutations(['INIT_SHOP_CART']),
+			...mapActions(['reqUserInfo'])
 		},
 	}
 </script>

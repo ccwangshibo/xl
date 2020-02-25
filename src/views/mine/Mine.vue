@@ -9,7 +9,8 @@
 		<!--头像和昵称-->
 		<van-cell-group>
 			<van-cell
-					style="background: #2EB257;color:#fff;margin-top: 2.5rem">
+					style="background: #2EB257;color:#fff;margin-top: 2.5rem"
+					@click="$router.push('/dashboard/mine/userCenter')">
 				<!-- 使用 title 插槽来自定义标题 -->
 				<template slot="title">
 					<div class="personInfo">
@@ -48,6 +49,10 @@
 		<van-cell-group style="margin-top:0.3rem">
 			<van-cell title="小赖买菜" icon="like" value="下载APP体验更佳" is-link/>
 		</van-cell-group>
+		<!--过渡跳转路由组件-->
+		<transition model="out-in" name="router-slider">
+			<router-view></router-view>
+		</transition>
 	</div>
 	<select-login v-else></select-login>
 </template>
@@ -113,5 +118,14 @@
 	.van-cell__left-icon{
 		color: orange;
 		font-size: 1rem;
+	}
+	/*路由过渡动画*/
+	.router-slider-enter-active, .router-slider-leave-active {
+		transition: all 0.5s;
+	}
+
+	.router-slider-enter, .router-slider-leave-active {
+		transform: translate3d(2rem, 0, 0);
+		opacity: 0;
 	}
 </style>

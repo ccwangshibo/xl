@@ -15,7 +15,10 @@ import Dashboard from '../views/dashboard/Dashboard'
 const Home = () => import('./../views/home/Home');
 const Category = () => import('./../views/category/Category');
 const Cart = () => import('./../views/cart/Cart');
+
+// 个人中心
 const Mine = () => import('./../views/mine/Mine');
+const UserCenter=()=>import('./../views/mine/children/UserCenter');
 
 // 其他组件
 const Order = () => import('../views/order/Order');
@@ -62,7 +65,10 @@ export default new Router({
 				{
 					path: "mine",
 					name: 'mine',
-					component: Mine
+					component: Mine,
+					children: [
+						{path: 'userCenter', name: 'userCenter', component:UserCenter}
+					]
 				}
 			]
 		},

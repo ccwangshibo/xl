@@ -4,11 +4,14 @@ import {
 	REDUCE_GOODS,
 	SELECT_SINGLE_GOODS,
 	SELECT_ALL_GOODS,
-	CLEAR_CART
+	CLEAR_CART,
+	USER_INFO,
+	INIT_USER_INFO,
+	RESET_USER_INFO
 } from './mutations-type'
 
 import Vue from 'vue'
-import {setStorage, getStorage} from "../config/global";
+import {setStorage, getStorage, removeStorage} from "../config/global";
 
 export default {
 	// 1.往购物车中添加数据
@@ -89,5 +92,25 @@ export default {
 		let shopCart = null;
 		state.shopCart = {...shopCart};
 		setStorage('shopCart', state.shopCart)
+	},
+	// 7.保存用户信息到本地
+	[USER_INFO](state, {userInfo}) {
+		console.log(userInfo);
+		state.userInfo = userInfo;
+		setStorage('userInfo', state.userInfo)
+	},
+	// 8.获取用户信息
+	[INIT_USER_INFO](state) {
+		let userInfo = getStorage('userInfo');
+		// 如果用户信息存在, 字符串解析成对象
+		if (userInfo) {
+			state.userInfo = JSON.parse(userInfo);
+		}
+	},
+	// 9.退出登录
+	[RESET_USER_INFO](state){
+		state.userInfo={};
+		removeStorage('userInfo');
 	}
+
 }

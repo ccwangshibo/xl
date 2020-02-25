@@ -15,4 +15,14 @@ export const getCategoriesDetail = (params) => ajax(BASE_URL + '/api/homeApi/cat
 // 2.1获取短信验证码
 export const getPhoneCode = (phone) => ajax(BASE_URL + '/api/send_code', {phone});
 // 2.2验证码登录请求
-export const phoneCodeLogin = (phone,code) => ajax(BASE_URL + '/api/login_code', {phone, code}, 'post');
+export const phoneCodeLogin = (phone, code) => ajax(BASE_URL + '/api/login_code', {phone, code}, 'post');
+// 2.3用户名密码登录
+export const pwdLogin = (userName, userPwd, captcha) => ajax(BASE_URL + '/api/login_pwd', {
+	userName,
+	userPwd,
+	captcha
+}, 'post');
+// 2.4自动登录
+export const getUserInfo=()=>ajax(BASE_URL+'/api/userinfo');
+// 2.5退出登录
+export const getLogout=()=>ajax(BASE_URL+'/api/logout');

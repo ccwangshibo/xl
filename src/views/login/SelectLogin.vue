@@ -19,10 +19,11 @@
 	}
 
 	.login {
-		width: 10rem;
-		height: 3rem;
+		width: 14rem;
+		height: 2.5rem;
 		color: #fff;
 		background-color: #2EB257;
-		line-height: 3rem;
+		line-height: 2.5rem;
+		border-radius: 2px;
 	}
 </style>
