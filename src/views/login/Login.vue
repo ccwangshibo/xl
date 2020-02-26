@@ -52,7 +52,7 @@
 
 	import {getPhoneCode, phoneCodeLogin, pwdLogin} from "../../service/api";
 
-	import {mapMutations,mapActions} from 'vuex'
+	import {mapMutations, mapActions} from 'vuex'
 	import {USER_INFO} from "../../store/mutations-type";
 
 	export default {
@@ -140,9 +140,10 @@
 						this.syncUserInfo(result.data);
 						this.$router.back();
 					} else {
-						this.userInfo = {
-							message: "登录失败, 用户名或验证码错误!"
-						};
+						Toast({
+							message: "登陆失败, 手机或验证码错误",
+							duration: 500
+						})
 					}
 				} else { // 3.3用户名密码登录
 					if (!this.userName) {
@@ -170,17 +171,11 @@
 					if (result.success_code === 200) {
 						this.syncUserInfo(result.data);
 					} else {
-						this.userInfo = {
-							message: "登录失败, 暂时不允许用此方式登录!"
-						};
+						Toast({
+							message: '测试环境, 不允许此方式登录!',
+							duration: 500
+						});
 					}
-				}
-				// 3.3登录的后续处理
-				if (!this.userInfo.token) { // 登录失败
-					Toast({
-						message: this.userInfo.message,
-						duration: 1000
-					})
 				}
 			},
 			// 4.切换密码显示方式

@@ -12,7 +12,7 @@ export default {
 		// 2.1从本地获取
 		let userInfo=JSON.parse(getStorage('userInfo'));
 		if(userInfo){
-			commit(USER_INFO,{userInfo})
+			commit(USER_INFO,{userInfo});
 		}else{
 			// 从服务器端验证
 			let result=await getUserInfo();

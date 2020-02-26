@@ -23,6 +23,17 @@ export const pwdLogin = (userName, userPwd, captcha) => ajax(BASE_URL + '/api/lo
 	captcha
 }, 'post');
 // 2.4自动登录
-export const getUserInfo=()=>ajax(BASE_URL+'/api/userinfo');
+export const getUserInfo = () => ajax(BASE_URL + '/api/userinfo');
 // 2.5退出登录
-export const getLogout=()=>ajax(BASE_URL+'/api/logout');
+export const getLogout = () => ajax(BASE_URL + '/api/logout');
+
+// 3.购物车接口
+// 3.1添加商品到购物车
+export const addGoodsToCart = (user_id, goods_id, goods_name, goods_price, small_image) => ajax(
+	BASE_URL + '/api/cart/add', {
+		user_id,
+		goods_id,
+		goods_name,
+		goods_price,
+		small_image
+	}, 'post')

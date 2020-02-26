@@ -24,13 +24,15 @@
 	export default {
 		name: "UserCenter",
 		methods:{
-			...mapMutations(['RESET_USER_INFO']),
+			...mapMutations(['RESET_USER_INFO','CLEAR_CART']),
 			async logout(){
 				// 服务器端退出登录
 				let result = await getLogout();
 				if(result.success_code === 200){
 					// 本地删除用户信息
 					this.RESET_USER_INFO();
+					// 本地删除购物车数据
+					this.CLEAR_CART();
 					Toast({
 						message:"退出成功!",
 						duration:500

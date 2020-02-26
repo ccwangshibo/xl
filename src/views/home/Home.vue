@@ -22,9 +22,9 @@
 
 <script>
 	// 组件
-	import Header from './components/header/Header'
-	import Swiper from './components/swiper/Swiper'
-	import Nav from './components/nav/Nav'
+	import Header from './components/header/Header';
+	import Swiper from './components/swiper/Swiper';
+	import Nav from './components/nav/Nav';
 	import FlashSale from "./components/flashsale/FlashSale";
 	import YouLike from "./components/youLike/YouLike";
 	import MarkPage from "./components/markPage/MarkPage";
@@ -32,13 +32,13 @@
 	// 全局函数
 	import {showBack, animate} from "../../config/global";
 	// 数据请求函数
-	import {getHomeData} from './../../service/api/index'
+	import {getHomeData, addGoodsToCart} from './../../service/api/index'
 	// 引入通知插件
 	import PubSub from 'pubsub-js'
 	// 引入vant组件消息提示
 	import {Toast} from 'vant'
 	// 引入Vuex
-	import {mapMutations} from 'vuex'
+	import {mapMutations, mapState} from 'vuex'
 	import {Add_GOODS} from "../../store/mutations-type";
 
 	export default {
@@ -68,28 +68,30 @@
 			MarkPage
 		},
 		mounted() {
-			// 消息订阅, 添加到购物车
+			// 1.消息订阅, 添加到购物车
 			PubSub.subscribe('homeAddToCart', (msg, goods) => {
 				if (msg === 'homeAddToCart') {
-					this.ADD_GOODS({
-						goodsId: goods.id,
-						goodsName: goods.name,
-						smallImage: goods.small_image,
-						goodsPrice: goods.price
-					});
+					// 1.1判断用户是否登录
+					if (this.userInfo.token) {
+						// 1.2调用处理添加购物车的函数
+						this.dealGoodsAdd(goods);
+					} else {
+						// 1.3未登录 直接跳转到登录界面
+						this.$router.push('/login');
+					}
 				}
-				// 添加成功提示
-				Toast({
-					message: "商品成功加入购物车!",
-					duration: 1000
-				})
 			})
 		},
 		created() {
 			// async实现接收请求
 			this.reqData()
 		},
+		computed: {
+			...mapState(['userInfo'])
+		},
 		methods: {
+			// vuex方式
+			...mapMutations(['ADD_GOODS']),
 			// 请求数据
 			async reqData() {
 				let res = await getHomeData();
@@ -117,9 +119,29 @@
 				let docB = document.documentElement || document.body;
 				animate(docB, {scrollTop: '0'}, 800, 'ease-out');
 			},
-			// vuex方式
-			...mapMutations(['ADD_GOODS'])
+			// 处理添加购物车
+			async dealGoodsAdd(goods){
+				let result = await addGoodsToCart(this.userInfo.token,goods.id,goods.name,goods.price,goods.small_image);
+				console.log(result);
+				// 服务器增加成功 ,再添加到本地
+				if(result.success_code === 200){
+					this.ADD_GOODS({
+						goodsId: goods.id,
+						goodsName: goods.name,
+						smallImage: goods.small_image,
+						goodsPrice: goods.price
+					});
+					// 添加成功提示
+					Toast({
+						message: "商品成功加入购物车!",
+						duration: 1000
+					})
+				}
+			}
 		},
+		beforeDestroy() {
+			PubSub.unsubscribe('homeAddToCart')
+		}
 	}
 </script>
 

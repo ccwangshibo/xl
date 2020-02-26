@@ -129,6 +129,9 @@
 			// 三.vuex
 			...mapMutations(['ADD_GOODS'])
 		},
+		beforeDestroy() {
+			PubSub.unsubscribe('categoryAddToCart')
+		}
 	}
 </script>
 

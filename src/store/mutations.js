@@ -1,5 +1,5 @@
 import {
-	Add_GOODS,
+	ADD_GOODS,
 	INIT_SHOP_CART,
 	REDUCE_GOODS,
 	SELECT_SINGLE_GOODS,
@@ -15,7 +15,7 @@ import {setStorage, getStorage, removeStorage} from "../config/global";
 
 export default {
 	// 1.往购物车中添加数据
-	[Add_GOODS](state, {goodsId, goodsName, smallImage, goodsPrice}) {
+	[ADD_GOODS](state, {goodsId, goodsName, smallImage, goodsPrice}) {
 		let shopCart = state.shopCart;
 		// 1.1判断商品是否存在
 		if (shopCart[goodsId]) { //商品存在,数量加1
@@ -95,7 +95,6 @@ export default {
 	},
 	// 7.保存用户信息到本地
 	[USER_INFO](state, {userInfo}) {
-		console.log(userInfo);
 		state.userInfo = userInfo;
 		setStorage('userInfo', state.userInfo)
 	},
