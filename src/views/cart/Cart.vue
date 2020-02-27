@@ -48,8 +48,10 @@
 <script>
 	import SelectLogin from "../login/SelectLogin";
 
-	import {Dialog} from 'vant'
-	import {mapState, mapMutations} from 'vuex'
+	import {Dialog,Toast} from 'vant';
+	import {mapState, mapMutations} from 'vuex';
+
+	import {changeCartNum, clearAllCart} from "../../service/api";
 
 	export default {
 		name: 'Cart',
@@ -65,24 +67,37 @@
 				'CLEAR_CART'
 			]),
 			// 1.移出购物车功能
-			removeOutCart(goodsId, goodsNum) {
+			async removeOutCart(goodsId, goodsNum) {
 				if (goodsNum > 1) {
-					// 调用vuex中的移出购物车
-					this.REDUCE_GOODS({goodsId})
+					// 发送服务器请求
+					let result = await changeCartNum(this.userInfo.token, goodsId, 'reduce');
+					if (result.success_code === 200) {
+						// 调用vuex中的移出购物车
+						this.REDUCE_GOODS({goodsId});
+					}
 				} else {
 					Dialog.confirm({
 						title: '温馨提示',
 						message: '确认将商品移出购物车?'
-					}).then(() => {
-						this.REDUCE_GOODS({goodsId}) // on confirm
+					}).then(async () => {
+						// 发送服务器请求
+						let result = await changeCartNum(this.userInfo.token, goodsId, 'reduce');
+						console.log(result);
+						if (result.success_code === 200) {
+							this.REDUCE_GOODS({goodsId});
+						}
 					}).catch(() => {
 						// on cancel
 					});
 				}
 			},
 			// 2.添加购物车
-			addToCart(goodsId, goodsName, smallImage, goodsPrice) {
-				this.ADD_GOODS({goodsId, goodsName, smallImage, goodsPrice})
+			async addToCart(goodsId, goodsName, smallImage, goodsPrice) {
+				let result = await changeCartNum(this.userInfo.token, goodsId, 'add');
+				if (result.success_code === 200) {
+					// 本地添加
+					this.ADD_GOODS({goodsId, goodsName, smallImage, goodsPrice});
+				}
 			},
 			// 3.改变单个商品的选中状态
 			singleProductSelected(goodsId) {
@@ -93,20 +108,27 @@
 				this.SELECT_ALL_GOODS({isSelected})
 			},
 			// 5.清空购物车
-			clearCart(){
+			clearCart() {
 				Dialog.confirm({
-					title:"温馨提示",
-					message:"确定要清空购物车吗?"
-				}).then(()=>{
-					this.CLEAR_CART();
-				}).catch(()=>{
+					title: "温馨提示",
+					message: "确定要清空购物车吗?"
+				}).then(async () => {
+					let result = await clearAllCart(this.userInfo.token);
+					if (result.success_code === 200) {
+						this.CLEAR_CART();
+						Toast({
+							message:"购物车已清空",
+							duration:1000
+						})
+					}
+				}).catch(() => {
 					// nothing to do
 				})
 			}
 		},
 		computed: {
 			// 购物车和用户数据
-			...mapState(['shopCart','userInfo']),
+			...mapState(['shopCart', 'userInfo']),
 			// 0.计算结算商品数量(选中的商品)
 			payCount() {
 				let selectedGoodsCount = 0;
@@ -142,7 +164,7 @@
 				return selectedGoodsPrice;
 			}
 		},
-		components:{
+		components: {
 			SelectLogin
 		}
 	}

@@ -77,6 +77,10 @@
 						this.dealGoodsAdd(goods);
 					} else {
 						// 1.3未登录 直接跳转到登录界面
+						Toast({
+							message:"尚未登录, 请登录后再试!",
+							duration:1000
+						});
 						this.$router.push('/login');
 					}
 				}
@@ -122,7 +126,6 @@
 			// 处理添加购物车
 			async dealGoodsAdd(goods){
 				let result = await addGoodsToCart(this.userInfo.token,goods.id,goods.name,goods.price,goods.small_image);
-				console.log(result);
 				// 服务器增加成功 ,再添加到本地
 				if(result.success_code === 200){
 					this.ADD_GOODS({

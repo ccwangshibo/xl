@@ -14,9 +14,7 @@
 				:area-list="areaList"
 				show-postal
 				show-set-default
-				show-search-result
 				:search-result="searchResult"
-				:area-columns-placeholder="['请选择', '请选择', '请选择']"
 				@save="onSave"
 				@change-detail="onChangeDetail"
 		/>
@@ -24,21 +22,62 @@
 </template>
 
 <script>
-	import { Toast } from 'vant';
+	import areaList from "../../../../config/area";
+
+	import {addUserAddress} from "../../../../service/api";
+
+	import {Toast} from 'vant';
+
+	import {mapState} from 'vuex';
+
+	import PubSub from 'pubsub-js';
+
+
 	export default {
 		name: "addAddress",
 		data() {
 			return {
-				areaList,
+				areaList: areaList,
 				searchResult: []
 			}
+		},
+		computed: {
+			...mapState(['userInfo'])
 		},
 		methods: {
 			onClickLeft() {
 				this.$router.back()
 			},
-			onSave() {
-				Toast('save');
+			async onSave(content) {
+				if (this.userInfo.token) {
+					// 调用保存地址的接口
+					let result = await addUserAddress(
+						this.userInfo.token,
+						content.name,
+						content.tel,
+						content.province + content.city + content.county,
+						content.addressDetail,
+						content.postalCode,
+						content.isDefault,
+						content.province,
+						content.city,
+						content.county,
+						content.areaCode);
+					if (result.success_code === 200) {
+						Toast({
+							message: "添加成功",
+							duration: 1000
+						});
+						this.$router.back();
+						// 发送订阅消息
+						PubSub.publish('regainAddress');
+					} else {
+						Toast({
+							message: "添加失败!",
+							duration: 1000
+						})
+					}
+				}
 			},
 			onChangeDetail(val) {
 				if (val) {

@@ -37,15 +37,18 @@
 	// BScroll组件
 	import BScroll from 'better-scroll'
 	// 引入请求数据接口
-	import {getCategories, getCategoriesDetail} from "../../service/api";
+	import {
+		getCategories,
+		getCategoriesDetail,
+		addGoodsToCart
+	} from "../../service/api";
 
 	// 引入通知插件
 	import PubSub from 'pubsub-js'
 	// 引入vant组件消息提示
 	import {Toast} from 'vant'
 	// 引入Vuex
-	import {mapMutations} from 'vuex'
-	import {Add_GOODS} from "../../store/mutations-type";
+	import {mapMutations, mapState} from 'vuex'
 
 	export default {
 		name: 'Category',
@@ -74,19 +77,23 @@
 			// 消息订阅, 添加到购物车
 			PubSub.subscribe('categoryAddToCart', (msg, goods) => {
 				if (msg === 'categoryAddToCart') {
-					this.ADD_GOODS({
-						goodsId: goods.id,
-						goodsName: goods.name,
-						smallImage: goods.small_image,
-						goodsPrice: goods.price
-					});
+					// 1.1判断用户是否登录
+					if (this.userInfo.token) {
+						// 1.2调用处理添加购物车的函数
+						this.dealGoodsAdd(goods);
+					} else {
+						// 1.3未登录 直接跳转到登录界面
+						Toast({
+							message: "尚未登录, 请登录后再试!",
+							duration: 1000
+						});
+						this.$router.push('/login');
+					}
 				}
-				// 添加成功提示
-				Toast({
-					message: "商品成功加入购物车!",
-					duration: 1000
-				})
 			})
+		},
+		computed: {
+			...mapState(['userInfo'])
 		},
 		methods: {
 			// 一.发送异步请求获取分类数据
@@ -108,7 +115,13 @@
 				this.showLoading = false;
 				// 4.初始化滚动框架
 				this.$nextTick(() => {
-					this.leftScroll = new BScroll('.leftWrapper', {probeType: 3})
+					this.leftScroll = new BScroll('.leftWrapper', {
+						probeType: 3,
+						click: true,
+						tap: true,
+						scrollY: true,
+						mouseWheel: true
+					})
 				})
 			},
 			// 二.处理左侧点击事件
@@ -127,7 +140,25 @@
 				// }
 			},
 			// 三.vuex
-			...mapMutations(['ADD_GOODS'])
+			...mapMutations(['ADD_GOODS']),
+			// 四.处理添加购物车
+			async dealGoodsAdd(goods) {
+				let result = await addGoodsToCart(this.userInfo.token, goods.id, goods.name, goods.price, goods.small_image);
+				// 服务器增加成功 ,再添加到本地
+				if (result.success_code === 200) {
+					this.ADD_GOODS({
+						goodsId: goods.id,
+						goodsName: goods.name,
+						smallImage: goods.small_image,
+						goodsPrice: goods.price
+					});
+					// 添加成功提示
+					Toast({
+						message: "商品成功加入购物车!",
+						duration: 1000
+					})
+				}
+			}
 		},
 		beforeDestroy() {
 			PubSub.unsubscribe('categoryAddToCart')

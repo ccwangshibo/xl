@@ -49,7 +49,7 @@
 
 <script>
 	// 引入消息订阅插件
-	import PubSub from 'pubsub-js'
+	import PubSub from 'pubsub-js';
 
 	export default {
 		name: "ProductItem",
@@ -61,9 +61,6 @@
 			addToCart(goods) {
 				PubSub.publish('categoryAddToCart', goods)
 			}
-		},
-		beforeDestroy() {
-			PubSub.unsubscribe('categoryAddToCart')
 		}
 	}
 </script>

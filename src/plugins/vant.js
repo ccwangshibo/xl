@@ -21,7 +21,7 @@ Vue.use(Dialog);
 import { NavBar } from 'vant';
 Vue.use(NavBar);
 
-// 添加地址
+// 联系人
 import { ContactCard, ContactList, ContactEdit } from 'vant';
 Vue.use(ContactCard);
 Vue.use(ContactList);

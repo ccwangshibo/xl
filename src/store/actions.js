@@ -16,7 +16,7 @@ export default {
 		}else{
 			// 从服务器端验证
 			let result=await getUserInfo();
-			console.log(result);
+			// console.log(result);
 			if(result.success_code===200){
 				commit(USER_INFO,{userInfo:result.data});
 			}
