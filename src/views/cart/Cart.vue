@@ -48,10 +48,10 @@
 <script>
 	import SelectLogin from "../login/SelectLogin";
 
-	import {Dialog,Toast} from 'vant';
+	import {Dialog, Toast} from 'vant';
 	import {mapState, mapMutations} from 'vuex';
 
-	import {changeCartNum, clearAllCart} from "../../service/api";
+	import {changeCartNum, clearAllCart, allGoodsSelect, singleGoodsSelect} from "../../service/api";
 
 	export default {
 		name: 'Cart',
@@ -100,12 +100,18 @@
 				}
 			},
 			// 3.改变单个商品的选中状态
-			singleProductSelected(goodsId) {
-				this.SELECT_SINGLE_GOODS({goodsId})
+			async singleProductSelected(goodsId) {
+				let result = await singleGoodsSelect(this.userInfo.token, goodsId);
+				if (result.success_code === 200) {
+					this.SELECT_SINGLE_GOODS({goodsId});
+				}
 			},
 			// 4.全选和取消全选
-			allSelected(isSelected) {
-				this.SELECT_ALL_GOODS({isSelected})
+			async allSelected(isSelected) {
+				let result = await allGoodsSelect(this.userInfo.token, isSelected);
+				if (result.success_code === 200) {
+					this.SELECT_ALL_GOODS({isSelected});
+				}
 			},
 			// 5.清空购物车
 			clearCart() {
@@ -117,8 +123,8 @@
 					if (result.success_code === 200) {
 						this.CLEAR_CART();
 						Toast({
-							message:"购物车已清空",
-							duration:1000
+							message: "购物车已清空",
+							duration: 1000
 						})
 					}
 				}).catch(() => {

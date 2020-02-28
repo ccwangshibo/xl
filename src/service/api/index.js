@@ -44,6 +44,13 @@ export const changeCartNum = (user_id, goods_id, type) => ajax(
 	BASE_URL + '/api/cart/num', {user_id, goods_id, type}, 'post');
 // 3.4清空购物车数据
 export const clearAllCart = (user_id) => ajax(BASE_URL + '/api/cart/clear/' + user_id);
+// 3.5单个商品的选中
+export const singleGoodsSelect = (user_id, goods_id) => ajax(BASE_URL + '/api/cart/singer_select', {
+	user_id,
+	goods_id
+}, 'post');
+// 3.6全选
+export const allGoodsSelect = (user_id, flag) => ajax(BASE_URL + '/api/cart/all_select', {user_id, flag}, 'post');
 
 // 4. 地址接口
 // 4.1 获取当前用户的地址

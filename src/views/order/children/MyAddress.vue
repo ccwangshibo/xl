@@ -15,6 +15,7 @@
 				:list="list"
 				@add="onAdd"
 				@edit="onEdit"
+				@select="onBackAddress"
 		></van-address-list>
 		<!--过渡跳转路由组件-->
 		<transition model="out-in" name="router-slider">
@@ -56,13 +57,14 @@
 				// Toast('编辑地址:' + index);
 				this.$router.push('/confirmOrder/myAddress/editAddress?address_id='+item.address_id);
 			},
-			// 获取当前用户地址
+			// 1获取当前用户地址
 			async initUserAddress() {
+				// 1.1判断登录
 				if (this.userInfo.token) {
 					let result = await getUserAddress(this.userInfo.token);
-					// 遍历数组生成新对象
+					// 1.2遍历数组生成新对象
 					let addressArr = result.data;
-					// 当前地址列表设置为空
+					// 1.3当前地址列表设置为空
 					this.list=[];
 					addressArr.forEach((address, index) => {
 						let addressObj = {
@@ -81,6 +83,14 @@
 						duration: 1000
 					})
 				}
+			},
+			// 2选择并发送地址对象
+			onBackAddress(item,index){
+				if(item){
+					// 2.1发送订阅消息并返回
+					PubSub.publish('getUserAddress',item);
+					this.$router.back();
+				}
 			}
 		},
 		mounted() {
@@ -88,7 +98,7 @@
 			// 消息订阅, 增加地址成功
 			PubSub.subscribe('regainAddress', (msg) => {
 				if (msg === 'regainAddress') {
-					// 获取当前地址
+					// 重新获取当前地址
 					this.initUserAddress();
 				}
 			})
