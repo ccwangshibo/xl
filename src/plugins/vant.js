@@ -56,3 +56,11 @@ Vue.use(Popup);
 // 时间选择器
 import { DatetimePicker } from 'vant';
 Vue.use(DatetimePicker);
+
+// 卡片
+import { Card } from 'vant';
+Vue.use(Card);
+
+// 输入框
+import { Field } from 'vant';
+Vue.use(Field);

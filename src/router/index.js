@@ -18,10 +18,11 @@ const Cart = () => import('./../views/cart/Cart');
 
 // 个人中心
 const Mine = () => import('./../views/mine/Mine');
-const UserCenter=()=>import('./../views/mine/children/UserCenter');
+const UserCenter = () => import('./../views/mine/children/UserCenter');
 
 // 其他组件
 const Order = () => import('../views/order/Order');
+const OrderDetail = () => import('../views/order/children/OrderDetail');
 const MyAddress = () => import('../views/order/children/MyAddress');
 const AddAddress = () => import('../views/order/children/children/addAddress');
 const EditAddress = () => import('../views/order/children/children/editAddress');
@@ -67,7 +68,7 @@ export default new Router({
 					name: 'mine',
 					component: Mine,
 					children: [
-						{path: 'userCenter', name: 'userCenter', component:UserCenter}
+						{path: 'userCenter', name: 'userCenter', component: UserCenter}
 					]
 				}
 			]
@@ -87,10 +88,11 @@ export default new Router({
 						{path: 'addAddress', name: 'addAddress', component: AddAddress},
 						{path: 'editAddress', name: 'editAddress', component: EditAddress}
 					]
-				}
+				},
+				{path:'orderDetail',name:'orderDetail',component:OrderDetail}
 			]
 		},
 		// 登录
-		{name:'login',path:'/login',component:Login}
+		{name: 'login', path: '/login', component: Login}
 	]
 })

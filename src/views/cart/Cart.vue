@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				<div class="footerRight">
-					<button class="pay" @click="$router.push('/confirmOrder')">去结算({{payCount}})</button>
+					<button class="pay" @click="toPay">去结算({{payCount}})</button>
 				</div>
 			</div>
 		</div>
@@ -130,6 +130,21 @@
 				}).catch(() => {
 					// nothing to do
 				})
+			},
+			// 6.去结算
+			toPay() {
+				if (this.totalPrice > 0) {
+					// 跳转路由并传递参数给Order
+					this.$router.push({
+						path: '/confirmOrder',
+						query: {totalPrice: this.totalPrice.toFixed(2),payCount:this.payCount}
+					});
+				} else {
+					Toast({
+						message: "请先选择要结算的商品!",
+						duration: 1000
+					})
+				}
 			}
 		},
 		computed: {
@@ -142,7 +157,7 @@
 					if (goods.checked) {
 						selectedGoodsCount += 1
 					}
-				})
+				});
 				return selectedGoodsCount
 			},
 			// 1.判断是否全选(全选按钮,与vuex无关)
@@ -154,7 +169,7 @@
 					if (!goods.checked) {
 						tag = false
 					}
-				})
+				});
 				return tag;
 			},
 			// 2.计算购物车中商品的总价
@@ -166,7 +181,7 @@
 						// 2.2如果选中就累加
 						selectedGoodsPrice += goods.num * goods.price
 					}
-				})
+				});
 				return selectedGoodsPrice;
 			}
 		},

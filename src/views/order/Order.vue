@@ -20,33 +20,38 @@
 		<!--送达时间-->
 		<van-cell-group style="margin-top: 0.3rem">
 			<van-cell title="送达时间" :value="arriveDate" is-link @click="showDatePopUp"/>
-			<van-cell value="共3件" is-link center>
+			<van-cell :value="`共${payCount}件`" is-link center @click="orderDetail">
 				<!-- 使用 title 插槽来自定义标题 -->
 				<template slot="title">
-					<img src="./images/detail1.jpg" alt="" style="width: 3rem">
-					<img src="./images/detail1.jpg" alt="" style="width: 3rem">
-					<img src="./images/detail1.jpg" alt="" style="width: 3rem">
+					<img v-for="(goods,index) of showThreeGoods" :key="index" :src="goods.small_image" alt=""
+							 style="width: 3rem">
 				</template>
 			</van-cell>
 		</van-cell-group>
 		<!--支付方式-->
 		<van-cell-group style="margin-top: 0.3rem">
-			<van-cell title="支付方式" value="支付宝"/>
+			<van-cell title="支付方式" value="微信支付"/>
 		</van-cell-group>
 		<!--备注-->
 		<van-cell-group style="margin-top: 0.3rem">
-			<van-cell title="备注信息">
-				<input type="text" placeholder="选填，请备注您的需求">
-			</van-cell>
+			<van-field
+					v-model="leaveMessage"
+					rows="1"
+					autosize
+					label="备注"
+					type="textarea"
+					placeholder="请输入备注"
+					input-align="right"
+			/>
 		</van-cell-group>
 		<!--价格和配送费-->
 		<van-cell-group style="margin-top: 0.3rem">
-			<van-cell title="商品金额" value="99.99"/>
-			<van-cell title="配送费" value="0.00"/>
+			<van-cell title="商品金额" :value="(totalPrice/100)|moneyFormat"/>
+			<van-cell title="配送费" :value="expressPrice|moneyFormat"/>
 		</van-cell-group>
 		<!--提交订单-->
 		<van-submit-bar
-				:price="3050"
+				:price="totalPrice"
 				button-text="提交订单"
 				@submit="onSubmit"
 				label="实付："
@@ -78,6 +83,8 @@
 
 	import Moment from 'moment';
 
+	import {mapState} from 'vuex';
+
 	export default {
 		name: "Order",
 		data() {
@@ -90,10 +97,15 @@
 				// 2.日期
 				dateShow: false, // 时间选择器的显示
 				currentDate: new Date(),
-				minDate: new Date(),
+				minDate: new Date(new Date().getTime()+3600*1000), // 最快一小时内送达
 				maxDate: new Date(2021, 3, 15),
 				// 3.送达时间
-				arriveDate: "请选择送达时间"
+				arriveDate: "请选择送达时间",
+				// 4.路由传参
+				totalPrice: null,
+				payCount: null,
+				// 5.留言备注
+				leaveMessage:null,
 			}
 		},
 		methods: {
@@ -110,7 +122,6 @@
 			// 弹出时间选择器
 			showDatePopUp() {
 				this.dateShow = true;
-				console.log(111)
 			},
 			// 取消选择时间
 			cancelDate() {
@@ -120,11 +131,39 @@
 			confirmDate(value) {
 				// 格式化并赋值给送达时间
 				this.dateShow = false;
-				this.arriveDate = Moment(value).format('YYYY-MM-DD hh:mm');
+				this.arriveDate = Moment(value).format('YYYY-MM-DD HH:mm');
+			},
+			// 查看订单详情
+			orderDetail() {
+				this.$router.push({
+					path: "/confirmOrder/orderDetail",
+					query: {payCount: this.payCount}
+				})
+			}
+		},
+		computed: {
+			...mapState(['shopCart']),
+			// 1.遍历购物车截取前三个商品
+			showThreeGoods() {
+				let shopCart = [];
+				Object.values(this.shopCart).forEach((goods, index) => {
+					if (goods.checked) {
+						shopCart.push(goods);
+					}
+				});
+				return shopCart.slice(0, 3)
+			},
+			// 2.计算配送费(超过60免费)
+			expressPrice(){
+				if(this.totalPrice>=6000){
+					return 0;
+				}else{
+					return 6;
+				}
 			}
 		},
 		mounted() {
-			// 接收订阅消息
+			// 1. 接收订阅消息
 			PubSub.subscribe('getUserAddress', (msg, address) => {
 				if (msg === 'getUserAddress') {
 					// 更新地址列表数据
@@ -133,7 +172,10 @@
 					this.address_tel = address.tel;
 					this.address_id = address.address_id;
 				}
-			})
+			});
+			// 2.接收路由传参
+			this.totalPrice = this.$route.query.totalPrice * 100;
+			this.payCount = this.$route.query.payCount;
 		},
 		beforeDestroy() {
 			PubSub.unsubscribe('getUserAddress')

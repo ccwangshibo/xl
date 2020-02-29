@@ -17,7 +17,7 @@
 						<img src="./images/touxiang.jpg" alt="">
 						<div class="nameNum">
 							<div class="name">鱼缸飞行计划</div>
-							<div class="number">605080754</div>
+							<div class="number">{{userInfo.phone}}</div>
 						</div>
 					</div>
 				</template>

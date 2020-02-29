@@ -116,10 +116,10 @@
 							shopCart[value.goods_id] = {
 								"num": value.num,
 								"id": value.goods_id,
-								"name": value.good_name,
+								"name": value.goods_name,
 								"small_image": value.small_image,
 								"price": value.goods_price,
-								"checked": true
+								"checked": value.checked
 							}
 						});
 						// 1.4数据同步到本地
