@@ -6,7 +6,7 @@
 							d="M14.521 30.445c.817.738 2.142.75 2.958 0 0 0 11.521-9.82 11.521-17.158C29 5.95 23.18 0 16 0S3 5.949 3 13.287c0 7.339 11.521 17.158 11.521 17.158zM16 18a5 5 0 1 0 0-10 5 5 0 0 0 0 10z">
 				</path>
 			</svg>
-			<span class="address">宇宙中心</span>
+			<span class="address">{{address||city||'努力定位中...'}}</span>
 			<svg viewBox="0 0 32 32" class="icon iconArrow">
 				<path fill="#81838E" fill-rule="evenodd"
 							d="M14.724 19.17c.783.784 2.05.788 2.837 0l5.047-5.047c1.173-1.172.776-2.123-.869-2.123H10.545c-1.652 0-2.04.952-.869 2.123l5.048 5.048z">
@@ -34,12 +34,17 @@
 	export default {
 		name: 'Header',
 		data() {
-			return {}
-		},
-		props: {},
-		components: {},
-		mounted() {
+			return {
+				latitude:0, // 纬度
+				longitude:0, // 经度
+				address:'',
+				city:'',
 
+				i:0 // 定位次数
+			}
+		},
+		mounted() {
+			this.getLocation();
 		},
 		methods: {
 		  toastMessage(){
@@ -47,7 +52,21 @@
           message:"对不起, 此功能正在开发!",
           duration:1000
         })
-      }
+      },
+			// 获取定位信息
+			getLocation(){
+		  	let geolocation=new qq.maps.Geolocation("3PXBZ-DOQK6-FQISF-M2BXT-MOETT-L6FIM", 'mapqq');
+		  	geolocation.getLocation(this.showLocation,this.showError)
+			},
+			showLocation(position){
+				this.longitude=position.lng;
+				this.latitude=position.lat;
+				this.city=position.city;
+				this.address=position.addr;
+			},
+			showError(){
+		  	this.getLocation()
+			}
     },
 	}
 </script>
@@ -85,15 +104,18 @@
 	.locationWrapper .address {
 		display: inline-block;
 		font-size: 0.8rem;
-		width: 65%;
+		width: auto;
+		max-width: 80%;
 		padding-left: 2rem;
 		white-space: nowrap;
 		/* 超出显示省略符号 */
 		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 
 	.locationWrapper .iconArrow {
 		vertical-align: middle;
+		margin-top: -2.5rem;
 	}
 
 	.iconLocation {

@@ -51,6 +51,8 @@ export const singleGoodsSelect = (user_id, goods_id) => ajax(BASE_URL + '/api/ca
 }, 'post');
 // 3.6全选
 export const allGoodsSelect = (user_id, flag) => ajax(BASE_URL + '/api/cart/all_select', {user_id, flag}, 'post');
+// 3.7删除已经生成订单的商品
+export const delAllSelectedGoods = (user_id) => ajax(BASE_URL + '/api/cart/del_checked/' + user_id);
 
 // 4. 地址接口
 // 4.1 获取当前用户的地址
@@ -95,3 +97,24 @@ export const getCurrentUserAddress = (user_id, address_id) => ajax(BASE_URL + '/
 	user_id,
 	address_id
 }, 'post');
+
+// 5.订单相关接口
+// 5.1提交订单
+export const postOrder = (user_id, address_id, arrive_time, cart_shop, notice, shop_price, dis_price) => ajax(
+	BASE_URL + '/api/order/post', {
+		user_id, address_id, arrive_time, cart_shop, notice, shop_price, dis_price
+	}, 'post');
+// 5.2订单支付成功
+export const orderPaySuccess = (user_id, order_id) => ajax(
+	BASE_URL + '/api/order/change_status', {user_id, order_id}, 'post');
+// 5.3查询订单
+export const getOrder = (user_id, status) => ajax(
+	BASE_URL + '/api/order/get', {user_id, status}, 'post');
+
+// 6.微信支付接口
+// const PAY_URL = 'http://47.98.157.152/WXPayProject/pay';
+const PAY_URL = '/pay'
+// 6.1获取支付的url
+export const getWXCode = (outTradeNo, totalFee) => ajax(PAY_URL + '/createNative.do', {outTradeNo, totalFee});
+// 6.2查询是否支付成功
+export const queryPayStatus = (out_trade_no) => ajax(PAY_URL + '/queryPayStatus.do', {out_trade_no});

@@ -2,9 +2,9 @@ import axios from 'axios'
 
 export default function ajax(url = '', params = {}, type = 'get') {
 	// 定义一个变量接收
-	let promise = '';
+	let promise;
 	// 1.返回Promise对象
-	return new Promise(function (resolve, reject) {
+	return new Promise((resolve, reject) => {
 		// 1.1判断请求类型
 		if (type === 'get') {
 			// 2.2 拼接字符串
@@ -14,9 +14,7 @@ export default function ajax(url = '', params = {}, type = 'get') {
 				paramsStr += key + '=' + params[key] + '&';
 			});
 			// 2.4 过滤最后的&
-			/*
-				注意：为了防止请求缓存，在尾部加了时间戳
-			*/
+			// 注意：为了防止请求缓存，在尾部加了时间戳
 			if (paramsStr) {
 				paramsStr = paramsStr.substr(0, paramsStr.lastIndexOf('&'));
 				// 2.5 拼接完整路径

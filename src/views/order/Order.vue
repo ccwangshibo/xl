@@ -71,6 +71,11 @@
 					@confirm="confirmDate"
 			/>
 		</van-popup>
+		<!--支付二维码-->
+		<van-popup v-model="isPay" round position="center" closeable>
+			<qriously :value="qrCode" :size="200" style="margin:2rem"/>
+			<van-notice-bar :text="noticeMessage" left-icon="volume-o"/>
+		</van-popup>
 		<!--过渡跳转路由组件-->
 		<transition model="out-in" name="router-slider">
 			<router-view></router-view>
@@ -80,10 +85,19 @@
 
 <script>
 	import PubSub from 'pubsub-js';
-
 	import Moment from 'moment';
+	import {Toast} from 'vant';
 
 	import {mapState} from 'vuex';
+
+	import {
+		postOrder,
+		orderPaySuccess,
+		getWXCode,
+		queryPayStatus,
+		allGoodsSelect,
+		delAllSelectedGoods
+	} from "../../service/api";
 
 	export default {
 		name: "Order",
@@ -97,15 +111,19 @@
 				// 2.日期
 				dateShow: false, // 时间选择器的显示
 				currentDate: new Date(),
-				minDate: new Date(new Date().getTime()+3600*1000), // 最快一小时内送达
+				minDate: new Date(new Date().getTime() + 3600 * 1000), // 最快一小时内送达
 				maxDate: new Date(2021, 3, 15),
 				// 3.送达时间
-				arriveDate: "请选择送达时间",
+				arriveDate: null,
 				// 4.路由传参
 				totalPrice: null,
 				payCount: null,
 				// 5.留言备注
-				leaveMessage:null,
+				leaveMessage: null,
+				// 6.二维码
+				isPay: false,
+				qrCode: "",
+				noticeMessage: "测试环境, 订单总价为1分钱, 请放心支付!"
 			}
 		},
 		methods: {
@@ -116,8 +134,74 @@
 			chooseAddress() {
 				this.$router.push('/confirmOrder/myAddress')
 			},
-			onSubmit() {
-
+			// 1.提交订单
+			async onSubmit() {
+				// 1.1判断必填信息
+				if (!this.address_id) {
+					Toast({
+						message: "请选择收货地址!",
+						duration: 1000
+					});
+					return;
+				}
+				if (!this.arriveDate) {
+					Toast({
+						message: "请选择送达时间!",
+						duration: 1000
+					});
+					return;
+				}
+				// 1.2处理订单
+				// 1.2.1选中商品查询
+				let goodsResult = await allGoodsSelect(this.userInfo.token);
+				if (goodsResult.success_code === 200) {
+					// 1.2.2订单创建
+					let orderResult = await postOrder(this.userInfo.token, this.address_id, this.arriveDate, goodsResult.data, this.leaveMessage, this.totalPrice, this.expressPrice)
+					if (orderResult.success_code === 200) {
+						// 1.2.3从购物车中删除已经生成订单的产品
+						let delResult = await delAllSelectedGoods(this.userInfo.token);
+						if (delResult.success_code === 200) {
+							// 1.2.4发起微信支付
+							let urlResult = await getWXCode(orderResult.data.order_id, 1);
+							if (urlResult.code_url) {
+								this.qrCode = urlResult.code_url;
+								this.isPay = true;
+								// 1.2.5验证用户是否扫码
+								let payResult = await queryPayStatus(orderResult.data.order_id);
+								if (payResult.success) {
+									Toast({
+										message: "支付成功!",
+										duration: 1000
+									});
+									this.isPay = false;
+									// 1.2.6通知服务器订单支付成功
+									let statusResult = await orderPaySuccess(this.userInfo.token, orderResult.data.order_id);
+									if (statusResult.success_code === 200) {
+										// 1.2.7跳转到我的订单
+										this.$router.replace('/dashboard/mine');
+										// 设置本地缓存的选项卡索引
+										window.sessionStorage.setItem('tabBarActiveIndex', '3');
+									}
+								}
+							}
+						} else {
+							Toast({
+								message: "购物车同步失败",
+								duration: 1000
+							})
+						}
+					} else {
+						Toast({
+							message: "订单创建失败!",
+							duration: 1000
+						})
+					}
+				} else {
+					Toast({
+						message: "商品状态有误!",
+						duration: 1000
+					})
+				}
 			},
 			// 弹出时间选择器
 			showDatePopUp() {
@@ -142,7 +226,7 @@
 			}
 		},
 		computed: {
-			...mapState(['shopCart']),
+			...mapState(['shopCart', 'userInfo']),
 			// 1.遍历购物车截取前三个商品
 			showThreeGoods() {
 				let shopCart = [];
@@ -154,10 +238,10 @@
 				return shopCart.slice(0, 3)
 			},
 			// 2.计算配送费(超过60免费)
-			expressPrice(){
-				if(this.totalPrice>=6000){
+			expressPrice() {
+				if (this.totalPrice >= 6000) {
 					return 0;
-				}else{
+				} else {
 					return 6;
 				}
 			}

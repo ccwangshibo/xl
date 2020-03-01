@@ -64,3 +64,17 @@ Vue.use(Card);
 // 输入框
 import { Field } from 'vant';
 Vue.use(Field);
+
+// 通知栏
+import { NoticeBar } from 'vant';
+Vue.use(NoticeBar);
+
+// 标签页
+import { Tab, Tabs } from 'vant';
+Vue.use(Tab);
+Vue.use(Tabs);
+
+// 优惠券
+import { CouponCell, CouponList } from 'vant';
+Vue.use(CouponCell);
+Vue.use(CouponList);

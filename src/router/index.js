@@ -19,6 +19,7 @@ const Cart = () => import('./../views/cart/Cart');
 // 个人中心
 const Mine = () => import('./../views/mine/Mine');
 const UserCenter = () => import('./../views/mine/children/UserCenter');
+const MyOrder=()=>import('./../views/mine/children/MyOrder')
 
 // 其他组件
 const Order = () => import('../views/order/Order');
@@ -68,7 +69,8 @@ export default new Router({
 					name: 'mine',
 					component: Mine,
 					children: [
-						{path: 'userCenter', name: 'userCenter', component: UserCenter}
+						{path: 'userCenter', name: 'userCenter', component: UserCenter},
+						{path: 'myOrder', name: 'myOrder', component: MyOrder}
 					]
 				}
 			]

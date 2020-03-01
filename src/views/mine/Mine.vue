@@ -24,7 +24,7 @@
 			</van-cell>
 		</van-cell-group>
 		<!--查看所有订单-->
-		<van-cell-group style="margin-top: 0.3rem">
+		<van-cell-group style="margin-top: 0.3rem" @click="$router.push('/dashboard/mine/myOrder')">
 			<van-cell title="我的订单" icon="label" value="查看所有订单" is-link/>
 			<van-grid>
 				<van-grid-item
